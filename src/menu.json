@@ -223,7 +223,7 @@
         "description": "",
         "price": 12000,
         "category": "Nuestras Pastas",
-        "image": "/sorrentinos.jpg",
+        "image": "sorrentinos.jpg",
         "requires_kitchen": true,
         "additionals": []
       },
@@ -233,7 +233,7 @@
         "description": "",
         "price": 10000,
         "category": "Nuestras Pastas",
-        "image": "/ñoquis.jpg",
+        "image": "ñoquis.jpg",
         "requires_kitchen": true,
         "additionals": []
       },
@@ -243,7 +243,7 @@
         "description": "",
         "price": 9000,
         "category": "Nuestras Pastas",
-        "image": "/fideos.jpg",
+        "image": "fideos.jpg",
         "requires_kitchen": true,
         "additionals": []
       },
@@ -253,7 +253,7 @@
         "description": "",
         "price": 13000,
         "category": "Nuestras Pastas",
-        "image": "/panzotis.jpg",
+        "image": "panzotis.jpg",
         "requires_kitchen": true,
         "additionals": []
       },
@@ -263,7 +263,7 @@
         "description": "",
         "price": 13000,
         "category": "Nuestras Pastas",
-        "image": "/lasaña.jpg",
+        "image": "lasaña.jpg",
         "requires_kitchen": true,
         "additionals": []
       },
@@ -273,7 +273,7 @@
         "description": "",
         "price": 12000,
         "category": "Nuestras Pastas",
-        "image": "/canelones.jpg",
+        "image": "canelones.jpg",
         "requires_kitchen": true,
         "additionals": []
       },
