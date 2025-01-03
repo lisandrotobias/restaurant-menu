@@ -20,7 +20,7 @@
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 </script>
 
-<div class="container mx-auto px-4 pb-20 font-primary" style="--accent-color: #FF6B6B;">
+<div class="container mx-auto px-4 pb-20 font-primary" style="--accent-color: #D00000;">
   <!-- Logo section -->
   <div class="pt-6 pb-2 text-center flex flex-col items-center">
     <img src="/logo.jpg" alt="Logo Restaurante" class="h-44" />

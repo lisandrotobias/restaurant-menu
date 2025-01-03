@@ -90,7 +90,7 @@
        {
         "id": 4,
         "name": "Flan Casero",
-        "description": "",
+        "description": "(Adicional dulce c/ crema) $2.000",
         "price": 6000,
         "category": "Postres",
         "image": "",
@@ -169,7 +169,7 @@
       },
       {
         "id": 13,
-        "name": "Colapito",
+        "name": "Colapinto - Lomito",
         "description": "(Lechuga, tomate, jamón y queso acompañado de salsa China Suarez)",
         "price": 13000,
         "category": "Sandwichs",
@@ -179,7 +179,7 @@
       },
       {
           "id": 14,
-          "name": "Maradoniano",
+          "name": "Maradoniano - Lomito",
            "description": "(Jamon, Queso, Doble Huevo)",
           "price": 11000,
           "category": "Sandwichs",
@@ -410,7 +410,7 @@
             "additionals": [
               {
                     "id": 1,
-                    "name": "5 ingredientes",
+                    "name": "4 ingredientes",
                       "price": 0
                   }
               ]
@@ -429,7 +429,7 @@
           "id": 36,
           "name": "Milanesa de ternera c/ Guarnicion",
           "description": "",
-          "price": 14000,
+          "price": 9000,
           "category": "Principales",
           "image": "", 
           "requires_kitchen": true,
@@ -439,7 +439,7 @@
           "id": 37,
           "name": "Milanesa Napolitana c/ Guarnicion",
            "description": "",
-          "price": 14000,
+          "price": 11000,
           "category": "Principales",
           "image": "", 
           "requires_kitchen": true,
@@ -489,7 +489,7 @@
           "id": 42,
           "name": "Carne al Horno c/ Papas",
            "description": "",
-          "price": 13000,
+          "price": 15000,
           "category": "Principales",
           "image": "", 
           "requires_kitchen": true,
