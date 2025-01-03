@@ -213,7 +213,7 @@
         "description": "",
         "price": 10000,
         "category": "Nuestras Pastas",
-        "image": "/ravioles.jpg",
+        "image": "ravioles.jpg",
         "requires_kitchen": true,
         "additionals": []
       },
