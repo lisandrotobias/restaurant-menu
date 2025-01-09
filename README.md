@@ -15,20 +15,20 @@
 
 ## Directory Structure
 
-bash
+```
 /opt/apps/
 ├── nginx/
-│ ├── conf.d/
-│ │ └── restaurant-menu.conf
-│ ├── certbot/
-│ │ ├── conf/
-│ │ └── www/
-│ ├── docker-compose.yml
-│ └── ssl-renew.sh
+│   ├── conf.d/
+│   │   └── restaurant-menu.conf
+│   ├── certbot/
+│   │   ├── conf/
+│   │   └── www/
+│   ├── docker-compose.yml
+│   └── ssl-renew.sh
 └── restaurant-menu/
-├── docker-compose.yml
-├── Dockerfile
-└── [application files]
+    ├── docker-compose.yml
+    ├── Dockerfile
+    └── [application files]
 ```
 
 ## Technical Implementation
