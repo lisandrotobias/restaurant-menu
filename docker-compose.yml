@@ -2,10 +2,26 @@ version: '3.8'
 
 services:
   restaurant-menu:
-    build: .
-    ports:
-      - "3000:3000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restaurant-menu
+    expose:
+      - "3000"
     environment:
       - NODE_ENV=production
-      - ORIGIN=http://localhost:3000
-    restart: unless-stopped 
+      - ORIGIN=https://menu.capybarasolutions.com  # Replace with your actual domain
+    networks:
+      - web
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  web:
+    name: nginx-proxy
+    external: true
