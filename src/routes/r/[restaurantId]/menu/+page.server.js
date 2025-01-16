@@ -1,32 +1,24 @@
-import { Redis } from 'ioredis';
-import { env } from '$env/dynamic/private';
-
-const redis = new Redis(env.REDIS_URL);
-const API_URL = env.API_URL;
-
 export async function load({ params }) {
     const { restaurantId } = params;
+    const BASE_URL = 'https://pos.capybarasolutions.com/api/v1';
+    
+    const fetchOptions = {
+        cache: 'no-store',
+        headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        }
+    };
     
     try {
-        // Try to get restaurant info from cache
-        let restaurantInfo = await redis.get(`info:${restaurantId}`);
-        if (!restaurantInfo) {
-            const infoResponse = await fetch(`${API_URL}/restaurants/${restaurantId}`);
-            restaurantInfo = await infoResponse.json();
-            await redis.set(`info:${restaurantId}`, JSON.stringify(restaurantInfo));
-        } else {
-            restaurantInfo = JSON.parse(restaurantInfo);
-        }
+        // Fetch restaurant info
+        const infoResponse = await fetch(`${BASE_URL}/restaurants/${restaurantId}`, fetchOptions);
+        const restaurantInfo = await infoResponse.json();
 
-        // Try to get menu from cache
-        let menu = await redis.get(`menu:${restaurantId}`);
-        if (!menu) {
-            const menuResponse = await fetch(`${API_URL}/restaurants/${restaurantId}/menu`);
-            menu = await menuResponse.json();
-            await redis.set(`menu:${restaurantId}`, JSON.stringify(menu));
-        } else {
-            menu = JSON.parse(menu);
-        }
+        // Fetch menu
+        const menuResponse = await fetch(`${BASE_URL}/restaurants/${restaurantId}/menu`, fetchOptions);
+        const menu = await menuResponse.json();
 
         return {
             restaurant: restaurantInfo,

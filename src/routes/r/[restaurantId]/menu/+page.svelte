@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { invalidateAll } from '$app/navigation';
   export let data;
   const { restaurant, menu } = data;
   
@@ -52,6 +53,15 @@
     });
 
     return () => observer.disconnect();
+  });
+
+  // Actualizar datos cada 30 segundos
+  onMount(() => {
+    const interval = setInterval(() => {
+      invalidateAll();
+    }, 30000); // 30 segundos
+
+    return () => clearInterval(interval);
   });
 
   // WhatsApp link only if phone number exists
