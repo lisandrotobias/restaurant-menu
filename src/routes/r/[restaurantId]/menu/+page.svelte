@@ -158,6 +158,20 @@
       </div>
     </div>
   {/each}
+
+  <!-- Footer -->
+  <div class="mt-12 pb-4 text-center">
+    <span class="text-xs text-gray-500">Made by</span>
+    <br />
+    <a 
+      href="https://capybarasolutions.com" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="font-['League_Spartan'] text-base font-bold text-black hover:text-accent transition-colors"
+    >
+      Capybara Solutions
+    </a>
+  </div>
 </div>
 
 <style>
