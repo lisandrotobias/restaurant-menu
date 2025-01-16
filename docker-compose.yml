@@ -6,15 +6,16 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: restaurant-menu
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
     env_file:
       - .env
     environment:
       - NODE_ENV=production
-      - ORIGIN=https://menu.capybarasolutions.com
+      - ORIGIN=https://pos.capybarasolutions.com
+      - API_URL=http://restaurant-api:8000
     networks:
-      - web
+      - app_network_prod
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
@@ -24,6 +25,5 @@ services:
       start_period: 40s
 
 networks:
-  web:
-    name: nginx-proxy
-    external: true
+  app_network_prod:
+    external: true 
