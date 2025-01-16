@@ -3,9 +3,12 @@ import adapter from '@sveltejs/adapter-vercel';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			runtime: 'edge',
+			regions: ['iad1'],
+			split: false
+		}),
 		prerender: {
-			entries: ['/r/1/menu'],
 			handleHttpError: ({ path, referrer, message }) => {
 				// Ignorar errores 404 para imágenes
 				if (path.endsWith('.jpg') || path.endsWith('.png')) {

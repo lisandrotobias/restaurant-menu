@@ -3,6 +3,7 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "sveltekit",
+  "outputDirectory": ".vercel/output/static",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
