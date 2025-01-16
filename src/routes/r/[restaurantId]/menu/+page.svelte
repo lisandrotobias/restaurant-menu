@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   export let data;
   const { restaurant, menu } = data;
   
@@ -18,10 +19,40 @@
   function scrollToCategory(categoryId) {
     const element = document.getElementById(`category-${categoryId}`);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const headerOffset = 180;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
       activeCategory = categoryId;
     }
   }
+
+  // Set up intersection observer
+  onMount(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const categoryId = parseInt(entry.target.id.split('-')[1]);
+          activeCategory = categoryId;
+        }
+      });
+    }, {
+      rootMargin: '-120px 0px -50% 0px', // Adjust these values to fine-tune when categories become active
+      threshold: 0
+    });
+
+    // Observe all category sections
+    sortedCategories.forEach(category => {
+      const element = document.getElementById(`category-${category.id}`);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  });
 
   // WhatsApp link only if phone number exists
   $: whatsappLink = restaurant.phone_number 
