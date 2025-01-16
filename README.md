@@ -1,4 +1,4 @@
-# Restaurant Menu - Production Setup
+# Restaurant Menu - Setup Guide
 
 ## Architecture Overview
 
@@ -7,9 +7,11 @@
 - Nginx reverse proxy
 - Let's Encrypt SSL certificates
 - SvelteKit application with Node.js backend
+- Redis for menu caching
 
 ### Domain Structure
 - Production URL: `menu.capybarasolutions.com`
+- Restaurant-specific menus: `menu.capybarasolutions.com/r/{restaurantId}/menu`
 - SSL: Enabled with auto-renewal
 - DNS: A record pointing to VPS IP
 
@@ -27,62 +29,81 @@
 │   └── ssl-renew.sh
 └── restaurant-menu/
     ├── docker-compose.yml
+    ├── docker-compose.dev.yml
     ├── Dockerfile
+    ├── .env.example
     └── [application files]
 ```
+
+## Environment Configuration
+
+Create a `.env` file based on `.env.example`:
+```env
+REDIS_URL=redis://localhost:6379
+API_URL=http://localhost:8000
+```
+
+## Development Setup
+
+Run the development container:
+```bash
+# Start the development server
+docker-compose -f docker-compose.dev.yml up --build
+
+# Stop the development server
+docker-compose -f docker-compose.dev.yml down
+```
+
+The development server will be available at `http://localhost:3000`
 
 ## Technical Implementation
 
 ### Docker Configuration
 
-#### Nginx Service
+#### Development Service
 ```yaml
-# /opt/apps/nginx/docker-compose.yml
-version: '3.8'
-services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./conf.d:/etc/nginx/conf.d
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    networks:
-      - web
-    restart: unless-stopped
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-
-networks:
-  web:
-    name: nginx-proxy
-    external: true
-```
-
-#### Restaurant Menu Service
-```yaml
-# /opt/apps/restaurant-menu/docker-compose.yml
+# docker-compose.dev.yml
 version: '3.8'
 services:
   restaurant-menu:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: restaurant-menu-dev
+    network_mode: "host"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+```
+
+#### Production Service
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  restaurant-menu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restaurant-menu
     expose:
       - "3000"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
       - ORIGIN=https://menu.capybarasolutions.com
     networks:
       - web
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   web:
@@ -147,46 +168,53 @@ Renewal is scheduled via crontab to run every 12 hours:
 0 */12 * * * /opt/apps/nginx/ssl-renew.sh >> /var/log/cron.log 2>&1
 ```
 
-## Deployment Process
+## API Integration
 
-1. DNS Configuration
-   - Created A record for `menu.capybarasolutions.com`
-   - Pointed to VPS IP address
+The application integrates with a backend API and uses Redis for caching:
 
-2. Initial Setup
-   - Created directory structure in `/opt/apps`
-   - Set up Docker network: `nginx-proxy`
-   - Configured Nginx and application services
-
-3. SSL Implementation
-   - Generated initial SSL certificate using Let's Encrypt
-   - Configured Nginx for SSL termination
-   - Set up automatic certificate renewal
-
-4. Service Deployment
-   - Deployed Nginx reverse proxy
-   - Deployed SvelteKit application
-   - Verified SSL and HTTP to HTTPS redirection
+- Menu endpoint: `{API_URL}/restaurants/{restaurantId}/menu`
+- Restaurant info: `{API_URL}/restaurants/{restaurantId}`
+- Cache keys:
+  - Menu: `menu:{restaurantId}`
+  - Restaurant info: `info:{restaurantId}`
 
 ## Maintenance
 
 ### Logs
 ```bash
+# Development logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Production logs
+docker-compose logs -f
+
 # Nginx logs
 docker-compose -f /opt/apps/nginx/docker-compose.yml logs -f nginx
-
-# Application logs
-docker-compose -f /opt/apps/restaurant-menu/docker-compose.yml logs -f
 ```
 
 ### Service Management
 ```bash
-# Restart services
-cd /opt/apps/nginx
+# Restart development
+docker-compose -f docker-compose.dev.yml restart
+
+# Restart production
 docker-compose restart
 
-cd /opt/apps/restaurant-menu
+# Restart nginx
+cd /opt/apps/nginx
 docker-compose restart
+```
+
+### Cache Management
+```bash
+# Connect to Redis CLI
+redis-cli
+
+# Clear specific restaurant cache
+DEL menu:1 info:1
+
+# Monitor cache operations
+MONITOR
 ```
 
 ### SSL Certificate

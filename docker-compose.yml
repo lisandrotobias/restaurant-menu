@@ -8,9 +8,11 @@ services:
     container_name: restaurant-menu
     expose:
       - "3000"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
-      - ORIGIN=https://menu.capybarasolutions.com  # Replace with your actual domain
+      - ORIGIN=https://menu.capybarasolutions.com
     networks:
       - web
     restart: unless-stopped

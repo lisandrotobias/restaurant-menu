@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  restaurant-menu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restaurant-menu-dev
+    network_mode: "host"  # This allows the container to access localhost services
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped 
