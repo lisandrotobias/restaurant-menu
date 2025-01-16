@@ -1,9 +1,10 @@
-export async function load({ params }) {
-    const { restaurantId } = params;
+import { error } from '@sveltejs/kit';
+
+export async function load() {
+    const RESTAURANT_ID = '1'; // ID fijo del restaurante
     const BASE_URL = 'https://pos.capybarasolutions.com/api/v1';
     
     const fetchOptions = {
-        cache: 'no-store',
         headers: {
             'Cache-Control': 'no-cache, no-store, must-revalidate',
             'Pragma': 'no-cache',
@@ -13,19 +14,19 @@ export async function load({ params }) {
     
     try {
         // Fetch restaurant info
-        const infoResponse = await fetch(`${BASE_URL}/restaurants/${restaurantId}`, fetchOptions);
+        const infoResponse = await fetch(`${BASE_URL}/restaurants/${RESTAURANT_ID}`, fetchOptions);
         const restaurantInfo = await infoResponse.json();
 
         // Fetch menu
-        const menuResponse = await fetch(`${BASE_URL}/restaurants/${restaurantId}/menu`, fetchOptions);
+        const menuResponse = await fetch(`${BASE_URL}/restaurants/${RESTAURANT_ID}/menu`, fetchOptions);
         const menu = await menuResponse.json();
 
         return {
             restaurant: restaurantInfo,
             menu
         };
-    } catch (error) {
-        console.error('Error loading restaurant data:', error);
-        throw error;
+    } catch (err) {
+        console.error('Error loading restaurant data:', err);
+        throw error(500, 'Error loading restaurant data');
     }
 } 
